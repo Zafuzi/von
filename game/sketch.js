@@ -6,6 +6,9 @@ let planets = [];
 
 let music;
 
+let camera;
+let zoom = 1;
+
 function setup() {
 	music = loadSound("assets/space.mp3");
 
@@ -14,25 +17,36 @@ function setup() {
 
 	angleMode(DEGREES);
 
+	camera = createVector(0, 0);
+
 	// realistic mass of the sun scaled down
 	sun = new Body(100, createVector(0, 0), createVector(0, 0), color(80, 20, 40));
 
 	Player();
+	Planet(40, createVector(1000, 1000));
 }
 
 function mousePressed() {
-	if(music.isPlaying()) {
-		music.pause();
-		return;
+	if(!music.isPlaying()) {
+		music.setVolume(0.2);
+		music.loop();
+	}
+}
+
+function mouseDragged(dragEvent) {
+	camera.x += dragEvent.movementX;
+	camera.y += dragEvent.movementY;
+}
+
+function mouseWheel(event) {
+	zoom += (-event.deltaY * 0.001);
+	if(zoom < 0.1) {
+		zoom = 0.1;
 	}
 
-	if(music.isPaused()) {
-		music.play();
-		return;
+	if(zoom > 2) {
+		zoom = 2;
 	}
-
-	music.setVolume(0.2);
-	music.loop();
 }
 
 let fader = 0;
@@ -41,8 +55,24 @@ let tick = 0;
 function draw() {
 	tick++;
 
-	translate(width / 2, height / 2);
 	background(10);
+
+	fill(color(255));
+	textSize(20);
+	textAlign("center");
+
+	if(tick < 300) {
+		text("You are in orbit around a dying star.", width/2, height - 40);
+	} else if(tick < 600) {
+		text("Your home is gone, lost to the solar winds.", width/2, height - 40);
+	} else if(tick < 900) {
+	} else if(tick < 2000) {
+		text("Will you save your species? Or will fate lead you to ruin?", width/2, height - 40);
+	}
+
+	translate((camera.x + width / 2), (camera.y + height / 2));
+	scale(zoom);
+
 
 	sun.update();
 	sun.draw();
@@ -62,23 +92,9 @@ function draw() {
 		faderDir *= -1;
 	}
 
-
 	for(let i = 0; i < planets.length; i++) {
 		planets[i].update();
 		planets[i].draw();
-	}
-
-	fill(color(255));
-	textSize(20);
-	textAlign("center");
-
-	if(tick < 300) {
-		text("You are in orbit around a dying star.", 0, height / 2 - 40);
-	} else if(tick < 600) {
-		text("Your home is gone, lost to the solar winds.", 0, height / 2 - 40);
-	} else if(tick < 900) {
-	} else if(tick < 2000) {
-		text("Will you save your species? Or will fate lead you to ruin?", 0, height / 2 - 40);
 	}
 }
 
@@ -91,7 +107,7 @@ function Body(_mass, _position, _velocity, _color) {
 
 	this.draw = function() {
 		if(this.origin) {
-			stroke(color(255, 255, 255, 100));
+			stroke(this.color);
 			strokeWeight(2);
 			noFill();
 			// draw the orbit based on the velocity
@@ -136,22 +152,21 @@ function Player() {
 }
 
 
-function Planet() {
+function Planet(radius, distance) {
 
-	const radius = random(5, 30);
 	let angle = random(360);
 
-
-	const velocity = createVector(random(30, 400), random(30, 400));
+	const velocity = createVector(2, 2);
 	const position = createVector(cos(angle) * velocity.x, sin(angle) * velocity.y);
 
 	const _color = color(random(255), random(255), random(255));
 	const planet = new Body(radius, position, velocity, _color);
 	planet.origin = createVector(random(-10, 10), random(-10, 10));
+	planet.distance = distance;
 
 	planet.update = function() {
-		const x = planet.origin.x + (velocity.x) * cos(angle);
-		const y = planet.origin.y + (velocity.y) * sin(angle);
+		const x = planet.origin.x + (distance.x + velocity.x) * cos(angle);
+		const y = planet.origin.y + (distance.x + velocity.y) * sin(angle);
 
 		this.position.x = x;
 		this.position.y = y;
