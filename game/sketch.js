@@ -6,6 +6,7 @@ let camera;
 let zoom = 0.4;
 
 let selectedPlanet = null;
+let showOrbits = true;
 
 function setup() {
 	music = loadSound("assets/space.mp3");
@@ -78,6 +79,13 @@ function mouseWheel(event) {
 	}
 }
 
+function keyPressed() {
+	console.log(key);
+	if(key === "`") {
+		showOrbits = !showOrbits;
+	}
+}
+
 let tick = 0;
 function draw() {
 	tick++;
@@ -127,7 +135,7 @@ function Body(_mass, _position, _velocity, _color) {
 	this.color = _color || color(random(255), random(255), random(255));
 
 	this.draw = function() {
-		if(this.origin) {
+		if(this.origin && showOrbits) {
 			stroke(this.color.levels[0], this.color.levels[1], this.color.levels[2], 100);
 			strokeWeight(2 / zoom);
 			noFill();
