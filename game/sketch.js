@@ -20,6 +20,21 @@ function setup() {
 	Player();
 }
 
+function mousePressed() {
+	if(music.isPlaying()) {
+		music.pause();
+		return;
+	}
+
+	if(music.isPaused()) {
+		music.play();
+		return;
+	}
+
+	music.setVolume(0.2);
+	music.loop();
+}
+
 let fader = 0;
 let faderDir = 1;
 let tick = 0;
