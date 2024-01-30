@@ -1,13 +1,8 @@
-const GRAVITY = 100;
-
-let sun, planet;
-
+let sun;
 let planets = [];
-
 let music;
-
 let camera;
-let zoom = 1;
+let zoom = 0.4;
 
 function setup() {
 	music = loadSound("assets/space.mp3");
@@ -34,8 +29,8 @@ function mousePressed() {
 }
 
 function mouseDragged(dragEvent) {
-	camera.x += dragEvent.movementX;
-	camera.y += dragEvent.movementY;
+	camera.x += dragEvent.movementX/zoom;
+	camera.y += dragEvent.movementY/zoom;
 }
 
 function mouseWheel(event) {
@@ -70,9 +65,9 @@ function draw() {
 		text("Will you save your species? Or will fate lead you to ruin?", width/2, height - 40);
 	}
 
-	translate((camera.x + width / 2), (camera.y + height / 2));
+	translate(width / 2, height / 2);
 	scale(zoom);
-
+	translate(camera.x, camera.y);
 
 	sun.update();
 	sun.draw();
