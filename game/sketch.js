@@ -11,7 +11,6 @@ function setup() {
 	music = loadSound("assets/space.mp3");
 
 	createCanvas(windowWidth, windowHeight);
-	frameRate(60);
 
 	angleMode(DEGREES);
 
@@ -21,7 +20,7 @@ function setup() {
 	sun = new Body(100, createVector(0, 0), createVector(0, 0), color(80, 20, 40));
 
 	Player();
-	Planet(40, createVector(1000, 1000));
+	Planet(20, createVector(100, 100), color(180, 180, 180, 255), player.position);
 }
 
 function mousePressed() {
@@ -79,18 +78,17 @@ function mouseWheel(event) {
 	}
 }
 
-let fader = 0;
-let faderDir = 1;
 let tick = 0;
 function draw() {
 	tick++;
 
-	background(0);
+	clear();
 
 	fill(color(255));
 	noStroke();
 	textSize(20);
 	textAlign("center");
+
 
 	if(tick < 300) {
 		text("You are in orbit around a dying star.", width/2, height - 40);
@@ -105,34 +103,20 @@ function draw() {
 	scale(zoom);
 	translate(camera.x, camera.y);
 
+	if(selectedPlanet) {
+		stroke(color(200, 200, 255, 255));
+		fill(color(200, 200, 255, 10));
+		circle(selectedPlanet.position.x, selectedPlanet.position.y, selectedPlanet.r * 2);
+	}
+
 	sun.update();
 	sun.draw();
-
-	// fake bloom around the sun using a gradient
-	noStroke();
-	for(let i = 0; i < 4; i++) {
-		fill(color(80, 20, 40, 100 + (i * fader)));
-		ellipse(sun.position.x, sun.position.y, sun.r + i * 10, sun.r + i * 10);
-	}
-
-	if(tick % 3 === 0) {
-		fader += faderDir;
-	}
-
-	if(fader > 25 || fader < 0) {
-		faderDir *= -1;
-	}
 
 	for(let i = 0; i < planets.length; i++) {
 		planets[i].update();
 		planets[i].draw();
 	}
 
-	if(selectedPlanet) {
-		noFill();
-		stroke(color(255));
-		rect(selectedPlanet.position.x - selectedPlanet.r, selectedPlanet.position.y - selectedPlanet.r, selectedPlanet.r * 2, selectedPlanet.r * 2);
-	}
 }
 
 function Body(_mass, _position, _velocity, _color) {
@@ -144,7 +128,7 @@ function Body(_mass, _position, _velocity, _color) {
 
 	this.draw = function() {
 		if(this.origin) {
-			stroke(this.color);
+			stroke(this.color.levels[0], this.color.levels[1], this.color.levels[2], 100);
 			strokeWeight(2 / zoom);
 			noFill();
 			// draw the orbit based on the velocity
@@ -164,7 +148,7 @@ function Body(_mass, _position, _velocity, _color) {
 
 function Player() {
 
-	const radius = 20;
+	const radius = 40;
 	let angle = random(360);
 
 	const velocity = createVector(100, 100);
@@ -173,7 +157,7 @@ function Player() {
 	const _color = color(0, 100, 255);
 	player = new Body(radius, position, velocity, _color);
 	player.origin = sun.position;
-	player.distance = createVector(100, 50);
+	player.distance = createVector(500, 500);
 
 	player.update = function() {
 		const x = player.origin.x + (player.distance.x + velocity.x) * cos(angle);
@@ -182,23 +166,22 @@ function Player() {
 		this.position.x = x;
 		this.position.y = y;
 
-		angle += velocity.mag() / (100 * deltaTime);
+		angle += 0.5 / deltaTime;
 	}
 
 	planets.push(player);
 }
 
 
-function Planet(radius, distance) {
-
+function Planet(radius, distance, _color, _origin, _speed) {
 	let angle = random(360);
 
-	const velocity = createVector(2, 2);
+	const velocity = createVector(100, 100);
 	const position = createVector(cos(angle) * velocity.x, sin(angle) * velocity.y);
 
-	const _color = color(random(255), random(255), random(255));
+	_color = _color || color(random(255), random(255), random(255));
 	const planet = new Body(radius, position, velocity, _color);
-	planet.origin = createVector(random(-10, 10), random(-10, 10));
+	planet.origin = _origin || createVector(random(-10, 10), random(-10, 10));
 	planet.distance = distance;
 
 	planet.update = function() {
@@ -208,7 +191,7 @@ function Planet(radius, distance) {
 		this.position.x = x;
 		this.position.y = y;
 
-		angle += velocity.mag() / 100 / deltaTime;
+		angle += _speed || 10 / deltaTime;
 	}
 
 	planets.push(planet);
