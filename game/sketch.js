@@ -1,8 +1,11 @@
 let sun;
+let player;
 let planets = [];
 let music;
 let camera;
 let zoom = 0.4;
+
+let selectedPlanet = null;
 
 function setup() {
 	music = loadSound("assets/space.mp3");
@@ -22,9 +25,41 @@ function setup() {
 }
 
 function mousePressed() {
+	const mouse = createVector(mouseX, mouseY);
+	const origin = createVector(width/2, height/2);
+	mouse.sub(origin.copy());
+	mouse.div(zoom);
+	mouse.sub(camera.copy());
+
 	if(!music.isPlaying()) {
 		music.setVolume(0.2);
 		music.loop();
+	}
+
+	if(mouseButton === LEFT) {
+		// console.log(`mouseX: ${mouse.x}, mouseY: ${mouse.y}`);
+		// console.log(`cameraX: ${camera.x}, cameraY: ${camera.y}`);
+
+		selectedPlanet = null;
+		for(let i = 0; i < planets.length; i++) {
+			const planet = planets[i];
+			if(optimizedHitTest(planet.position, planet.r, mouse, 0)) {
+				selectedPlanet = planet;
+				break;
+			}
+		}
+
+		if(!selectedPlanet) {
+			if(optimizedHitTest(sun.position, sun.r, mouse, 0)) {
+				selectedPlanet = sun;
+			}
+		}
+
+		if(!selectedPlanet) {
+			if(optimizedHitTest(player.position, player.r, mouse, 0)) {
+				selectedPlanet = player;
+			}
+		}
 	}
 }
 
@@ -50,9 +85,10 @@ let tick = 0;
 function draw() {
 	tick++;
 
-	background(10);
+	background(0);
 
 	fill(color(255));
+	noStroke();
 	textSize(20);
 	textAlign("center");
 
@@ -91,6 +127,12 @@ function draw() {
 		planets[i].update();
 		planets[i].draw();
 	}
+
+	if(selectedPlanet) {
+		noFill();
+		stroke(color(255));
+		rect(selectedPlanet.position.x - selectedPlanet.r, selectedPlanet.position.y - selectedPlanet.r, selectedPlanet.r * 2, selectedPlanet.r * 2);
+	}
 }
 
 function Body(_mass, _position, _velocity, _color) {
@@ -103,7 +145,7 @@ function Body(_mass, _position, _velocity, _color) {
 	this.draw = function() {
 		if(this.origin) {
 			stroke(this.color);
-			strokeWeight(2);
+			strokeWeight(2 / zoom);
 			noFill();
 			// draw the orbit based on the velocity
 			const width = (this.distance.x + this.velocity.x) * 2;
@@ -129,7 +171,7 @@ function Player() {
 	const position = createVector(cos(angle) * velocity.x, sin(angle) * velocity.y);
 
 	const _color = color(0, 100, 255);
-	const player = new Body(radius, position, velocity, _color);
+	player = new Body(radius, position, velocity, _color);
 	player.origin = sun.position;
 	player.distance = createVector(100, 50);
 
@@ -175,4 +217,9 @@ function Planet(radius, distance) {
 
 function windowResized() {
 	resizeCanvas(windowWidth, windowHeight);
+}
+
+function optimizedHitTest(position, radius, otherPosition, otherRadius) {
+	const distance = position.dist(otherPosition);
+	return distance < radius + otherRadius;
 }
