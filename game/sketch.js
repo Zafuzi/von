@@ -17,8 +17,6 @@ function setup() {
 	canvas = createCanvas(windowWidth, windowHeight);
 	ctx = canvas.elt.getContext("2d");
 
-	angleMode(DEGREES);
-
 	camera = createVector(0, 0);
 
 	// realistic mass of the sun scaled down
@@ -27,16 +25,7 @@ function setup() {
 	Planet(40, createVector(150, 0), color(0, 0, 180, 255));
 	Planet(100, createVector(600, 0), color(120, 40, 60, 255));
 
-	stars = createGraphics(width, height);
-	stars.pixelDensity(1);
-
-	stars.background(0);
-	stars.noStroke();
-	stars.fill(255, 255, 255, random(1, 255));
-	for(let i = 0; i < 10000; i++) {
-		let radius = random(0.5, 2);
-		stars.ellipse(random(-width, width), random(-height, height), radius, radius);
-	}
+	generateStars();
 }
 
 function mousePressed() {
@@ -123,9 +112,23 @@ function Planet(_radius, _position, _color) {
 	planets.push(planet);
 }
 
+function generateStars() {
+	stars = createGraphics(width, height);
+	stars.pixelDensity(1);
+
+	stars.background(0);
+	stars.noStroke();
+	for(let i = 0; i < 10000; i++) {
+		let radius = random(0.1, 3);
+		stars.fill(random(200, 255), random(200, 255), random(200, 255), random(10, 255));
+		stars.ellipse(random(-width, width), random(-height, height), radius, radius);
+	}
+}
+
 
 function windowResized() {
 	resizeCanvas(windowWidth, windowHeight);
+	generateStars();
 }
 
 function optimizedHitTest(position, radius, otherPosition, otherRadius) {
