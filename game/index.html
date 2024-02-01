@@ -15,11 +15,39 @@
 			padding: 0;
 			margin: 0;
 
-			background-color: #000005;
+			background-color: #181818;
 
 			background-repeat: repeat;
 			background-size: cover;
 			overflow: hidden;
+
+			width: 100vw;
+			height: 100vh;
+
+			color: white;
+		}
+		header {
+			height: 48px;
+			background-color: rgba(35, 62, 86, 0.35);
+			color: white;
+			backdrop-filter: blur(50px);
+			z-index: 99;
+		}
+		main {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			z-index: -1;
+		}
+		.p5canvas {
+			display: flex;
+			width: 100%;
+			height: 100%;
+			align-items: center;
+			justify-content: center;
+			z-index: 0;
 		}
 	</style>
 	<script src="packages/p5.js"></script>
@@ -28,8 +56,9 @@
 </head>
 
 <body>
-<main>
-</main>
+	<header>
+		<h1>Von</h1>
+	</header>
 </body>
 
 </html>

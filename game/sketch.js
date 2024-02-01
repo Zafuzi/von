@@ -1,33 +1,46 @@
 let sun;
-let player;
 let planets = [];
 let music;
 let camera;
 let zoom = 0.4;
-
-let selectedPlanet = null;
 let showOrbits = true;
 
-function setup() {
-	music = loadSound("assets/space.mp3");
+let canvas, ctx;
 
-	createCanvas(windowWidth, windowHeight);
+let stars;
+
+function preload() {
+	music = loadSound("assets/space.mp3");
+}
+
+function setup() {
+	canvas = createCanvas(windowWidth, windowHeight);
+	ctx = canvas.elt.getContext("2d");
 
 	angleMode(DEGREES);
 
 	camera = createVector(0, 0);
 
 	// realistic mass of the sun scaled down
-	sun = new Body(100, createVector(0, 0), createVector(0, 0), color(80, 20, 40));
+	sun = new Body(400, createVector(-600, 0), color(255, 200, 40));
+	Planet(20, createVector(-150, 0), color(180, 180, 0, 255));
+	Planet(40, createVector(150, 0), color(0, 0, 180, 255));
+	Planet(100, createVector(600, 0), color(120, 40, 60, 255));
 
-	Player();
-	Planet(20, createVector(100, 100), color(180, 180, 180, 255), player.position);
+	stars = createGraphics(width, height);
+	stars.pixelDensity(1);
+
+	stars.background(0);
+	stars.noStroke();
+	stars.fill(255, 255, 255, random(1, 255));
+	for(let i = 0; i < 10000; i++) {
+		let radius = random(0.5, 2);
+		stars.ellipse(random(-width, width), random(-height, height), radius, radius);
+	}
 }
 
 function mousePressed() {
 	const mouse = createVector(mouseX, mouseY);
-	const origin = createVector(width/2, height/2);
-	mouse.sub(origin.copy());
 	mouse.div(zoom);
 	mouse.sub(camera.copy());
 
@@ -39,27 +52,6 @@ function mousePressed() {
 	if(mouseButton === LEFT) {
 		// console.log(`mouseX: ${mouse.x}, mouseY: ${mouse.y}`);
 		// console.log(`cameraX: ${camera.x}, cameraY: ${camera.y}`);
-
-		selectedPlanet = null;
-		for(let i = 0; i < planets.length; i++) {
-			const planet = planets[i];
-			if(optimizedHitTest(planet.position, planet.r, mouse, 0)) {
-				selectedPlanet = planet;
-				break;
-			}
-		}
-
-		if(!selectedPlanet) {
-			if(optimizedHitTest(sun.position, sun.r, mouse, 0)) {
-				selectedPlanet = sun;
-			}
-		}
-
-		if(!selectedPlanet) {
-			if(optimizedHitTest(player.position, player.r, mouse, 0)) {
-				selectedPlanet = player;
-			}
-		}
 	}
 }
 
@@ -90,32 +82,15 @@ let tick = 0;
 function draw() {
 	tick++;
 
-	clear();
-
-	fill(color(255));
+	background(0);
 	noStroke();
-	textSize(20);
-	textAlign("center");
 
+	image(stars, 0, 0, width, height);
 
-	if(tick < 300) {
-		text("You are in orbit around a dying star.", width/2, height - 40);
-	} else if(tick < 600) {
-		text("Your home is gone, lost to the solar winds.", width/2, height - 40);
-	} else if(tick < 900) {
-	} else if(tick < 2000) {
-		text("Will you save your species? Or will fate lead you to ruin?", width/2, height - 40);
-	}
-
-	translate(width / 2, height / 2);
+	translate(width/2, height/2);
 	scale(zoom);
 	translate(camera.x, camera.y);
 
-	if(selectedPlanet) {
-		stroke(color(200, 200, 255, 255));
-		fill(color(200, 200, 255, 10));
-		circle(selectedPlanet.position.x, selectedPlanet.position.y, selectedPlanet.r * 2);
-	}
 
 	sun.update();
 	sun.draw();
@@ -127,81 +102,24 @@ function draw() {
 
 }
 
-function Body(_mass, _position, _velocity, _color) {
-	this.mass = _mass;
-	this.position = _position;
-	this.velocity = _velocity;
-	this.r = this.mass;
+function Body(_mass, _position, _color) {
+	this.mass = _mass || 1;
+	this.position = _position || createVector(0, 0);
 	this.color = _color || color(random(255), random(255), random(255));
+	this.radius = this.mass;
 
 	this.draw = function() {
-		if(this.origin && showOrbits) {
-			stroke(this.color.levels[0], this.color.levels[1], this.color.levels[2], 100);
-			strokeWeight(2 / zoom);
-			noFill();
-			// draw the orbit based on the velocity
-			const width = (this.distance.x + this.velocity.x) * 2;
-			const height = (this.distance.y + this.velocity.y) * 2;
-			ellipse(this.origin.x, this.origin.y, width, height);
-		}
-
 		noStroke();
 		fill(this.color);
-		ellipse(this.position.x, this.position.y, this.r, this.r);
+		ellipse(this.position.x, this.position.y, this.radius, this.radius);
 	}
 
-	this.update = function() {
-	}
-}
-
-function Player() {
-
-	const radius = 40;
-	let angle = random(360);
-
-	const velocity = createVector(100, 100);
-	const position = createVector(cos(angle) * velocity.x, sin(angle) * velocity.y);
-
-	const _color = color(0, 100, 255);
-	player = new Body(radius, position, velocity, _color);
-	player.origin = sun.position;
-	player.distance = createVector(500, 500);
-
-	player.update = function() {
-		const x = player.origin.x + (player.distance.x + velocity.x) * cos(angle);
-		const y = player.origin.y + (player.distance.y + velocity.y) * sin(angle);
-
-		this.position.x = x;
-		this.position.y = y;
-
-		angle += 0.5 / deltaTime;
-	}
-
-	planets.push(player);
+	this.update = function() {}
 }
 
 
-function Planet(radius, distance, _color, _origin, _speed) {
-	let angle = random(360);
-
-	const velocity = createVector(100, 100);
-	const position = createVector(cos(angle) * velocity.x, sin(angle) * velocity.y);
-
-	_color = _color || color(random(255), random(255), random(255));
-	const planet = new Body(radius, position, velocity, _color);
-	planet.origin = _origin || createVector(random(-10, 10), random(-10, 10));
-	planet.distance = distance;
-
-	planet.update = function() {
-		const x = planet.origin.x + (distance.x + velocity.x) * cos(angle);
-		const y = planet.origin.y + (distance.x + velocity.y) * sin(angle);
-
-		this.position.x = x;
-		this.position.y = y;
-
-		angle += _speed || 10 / deltaTime;
-	}
-
+function Planet(_radius, _position, _color) {
+	const planet = new Body(_radius, _position, _color);
 	planets.push(planet);
 }
 
