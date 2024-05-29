@@ -2,7 +2,7 @@ let sun;
 let planets = [];
 let music;
 let camera;
-let zoom = 0.4;
+let zoom = 1.2;
 let showOrbits = true;
 
 let canvas, ctx;
@@ -86,7 +86,7 @@ function setup() {
 	canvas = createCanvas(windowWidth, windowHeight);
 	ctx = canvas.elt.getContext("2d");
 
-	camera = createVector(0, 0);
+	camera = createVector(200, 100);
 
 	planets = new System();
 

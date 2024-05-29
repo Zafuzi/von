@@ -36,7 +36,13 @@ class Thing {
 class Component {
 	thing = null;
 
-	constructor(_thing, _update, _draw) {
+	/**
+	 * Setups a new component
+	 * @param _thing {Object<Thing>}
+	 * @param _update {Function} @optional
+	 * @param _draw {Function} @optional
+	 */
+	constructor(_thing, _update = null, _draw = null) {
 		this.thing = _thing;
 		if (_update) {
 			this.update = _update;
@@ -80,12 +86,7 @@ class cPointHit extends Component {
 			return false;
 		}
 
-		this.thing.selected = false;
-
-		if(isPointInCircle(mouseClickPosition, this.thing))
-		{
-			this.thing.selected = true;
-		}
+		this.thing.selected = isPointInCircle(mouseClickPosition, this.thing);
 	}
 }
 
