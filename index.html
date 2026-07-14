@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Von</title>
+  </head>
+
+  <body>
+    <header>
+      <h1>Von</h1>
+    </header>
+    <main>
+      <aside id="information_panel">
+        <h2>Information Panel</h2>
+        <h3>__body_name__</h3>
+      </aside>
+
+      <div class="scroller" id="game_canvas">
+        <div id="game_canvas_scroll">
+          <div class="sun red" style="width: 176px; height: 176px" data-name="Sol"></div>
+          <div class="planet blue" style="width: 88px; height: 88px" data-name="Earth">
+            <ul class="station_list">
+              <li
+                class="station green"
+                style="width: 44px; height: 44px"
+                data-name="Station 1"
+              ></li>
+              <li
+                class="station green"
+                style="width: 44px; height: 44px"
+                data-name="Station 2"
+              ></li>
+              <li
+                class="station green"
+                style="width: 44px; height: 44px"
+                data-name="Station 3"
+              ></li>
+            </ul>
+          </div>
+
+          <div class="planet yellow" style="width: 102px; height: 102px" data-name="Mars"></div>
+
+          <div class="planet orange" style="width: 300px; height: 300px" data-name="Jupiter">
+            <ul class="station_list">
+              <li
+                class="station green"
+                style="width: 44px; height: 44px"
+                data-name="Station 1"
+              ></li>
+            </ul>
+          </div>
+
+          <div class="planet blue" style="width: 88px; height: 88px" data-name="Neptune">
+            <ul class="station_list">
+              <li
+                class="station green"
+                style="width: 44px; height: 44px"
+                data-name="Station 1"
+              ></li>
+              <li
+                class="station green"
+                style="width: 44px; height: 44px"
+                data-name="Station 2"
+              ></li>
+              <li
+                class="station green"
+                style="width: 44px; height: 44px"
+                data-name="Station 3"
+              ></li>
+            </ul>
+          </div>
+
+          <div class="planet yellow" style="width: 102px; height: 102px" data-name="Venus"></div>
+
+          <div class="planet orange" style="width: 300px; height: 300px" data-name="Pluto">
+            <ul class="station_list">
+              <li
+                class="station green"
+                style="width: 44px; height: 44px"
+                data-name="Station 1"
+              ></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script
+      src="https://code.jquery.com/jquery-4.0.0.min.js"
+      integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao="
+      crossorigin="anonymous"
+    ></script>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,145 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  background-color: #181818;
+  color: #e1e1e1;
+  width: 100vw;
+  height: 100vh;
+}
+
+body {
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+header {
+  background-color: #769fc959;
+}
+
+main {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.05);
+
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+}
+
+main #information_panel {
+  position: absolute;
+  top: 0;
+  left: -400px;
+  width: 400px;
+  background-color: #3e5d7c30;
+  backdrop-filter: blur(8px);
+  height: calc(100% - 16px);
+  z-index: 1;
+  transition: left 0.3s ease-in-out;
+}
+
+main #game_canvas {
+  height: 100%;
+  background-color: black;
+  padding: 44px;
+  width: 100%;
+  border: 2px solid red;
+  overflow: hidden;
+}
+
+main #game_canvas_scroll {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: start;
+  gap: 44px;
+  width: max-content;
+  padding: 400px;
+  border: 2px solid green;
+}
+
+.sun,
+.planet,
+.station {
+  display: flex;
+  min-height: min-content;
+  position: relative;
+  user-select: none;
+  cursor: pointer;
+  touch-action: auto;
+}
+
+.sun::before,
+.planet::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  opacity: 0.8;
+  border: 2px solid black;
+}
+
+.station::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 25%;
+
+  opacity: 0.8;
+  border: 2px solid black;
+}
+
+.sun:hover::before,
+.station:hover::before {
+  opacity: 1;
+  border: 2px dashed white;
+}
+
+.planet:not(:has(.station_list:hover)):hover::before {
+  opacity: 1;
+  border: 2px dashed white;
+}
+
+.station_list {
+  position: absolute;
+  top: calc(100% + 44px);
+  width: 100%;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+  gap: 44px;
+}
+
+.active::before {
+  opacity: 1;
+  border: 2px dashed white;
+}
+
+.red::before {
+  background-color: red;
+}
+
+.blue::before {
+  background-color: blue;
+}
+
+.green::before {
+  background-color: green;
+}
+
+.yellow::before {
+  background-color: yellow;
+}
+
+.orange::before {
+  background-color: orange;
+}
