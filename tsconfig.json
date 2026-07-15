@@ -3,6 +3,8 @@
     "target": "es2023",
     "module": "esnext",
     "lib": ["ES2023", "DOM"],
+    "jsx": "preserve",
+    "jsxImportSource": "preact",
     "types": ["vite/client", "jquery"],
     "allowArbitraryExtensions": true,
     "skipLibCheck": true,

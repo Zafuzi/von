@@ -10,7 +10,10 @@
     "prepare": "vp config"
   },
   "dependencies": {
-    "@types/jquery": "^4.0.1"
+    "@preact/preset-vite": "^2.10.5",
+    "@types/jquery": "^4.0.1",
+    "@types/react": "^19.2.17",
+    "@vitejs/plugin-vue": "^6.0.8"
   },
   "devDependencies": {
     "typescript": "~6.0.2",

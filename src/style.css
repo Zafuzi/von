@@ -39,9 +39,13 @@ main #information_panel {
   width: 400px;
   background-color: #3e5d7c30;
   backdrop-filter: blur(8px);
-  height: calc(100% - 16px);
+  height: 100%;
   z-index: 1;
   transition: left 0.3s ease-in-out;
+}
+
+main #information_panel.active {
+  left: 0;
 }
 
 main #game_canvas {
@@ -49,33 +53,43 @@ main #game_canvas {
   background-color: black;
   padding: 44px;
   width: 100%;
-  border: 2px solid red;
+  /* border: 2px solid red; */
   overflow: hidden;
 }
 
 main #game_canvas_scroll {
   display: flex;
+  flex: 1;
   flex-flow: row nowrap;
-  align-items: center;
-  justify-content: start;
+  align-items: stretch;
+  justify-content: center;
   gap: 44px;
   width: max-content;
   padding: 400px;
-  border: 2px solid green;
+  /* border: 2px solid green; */
 }
 
-.sun,
+.star,
 .planet,
 .station {
+  /* border: 1px solid yellow; */
   display: flex;
+  flex-shrink: 0;
+  flex-grow: 1;
   min-height: min-content;
   position: relative;
   user-select: none;
   cursor: pointer;
   touch-action: auto;
+
+  align-items: end;
+  justify-content: space-evenly;
+  flex-direction: column;
+
+  gap: 44px;
 }
 
-.sun::before,
+.star::before,
 .planet::before {
   content: "";
   display: block;
@@ -84,6 +98,7 @@ main #game_canvas_scroll {
   border-radius: 50%;
   opacity: 0.8;
   border: 2px solid black;
+  transform: translate3d(0, -50%, 0);
 }
 
 .station::before {
@@ -97,7 +112,7 @@ main #game_canvas_scroll {
   border: 2px solid black;
 }
 
-.sun:hover::before,
+.star:hover::before,
 .station:hover::before {
   opacity: 1;
   border: 2px dashed white;
@@ -108,20 +123,13 @@ main #game_canvas_scroll {
   border: 2px dashed white;
 }
 
-.station_list {
-  position: absolute;
-  top: calc(100% + 44px);
-  width: 100%;
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-  justify-content: center;
-  gap: 44px;
-}
-
 .active::before {
   opacity: 1;
   border: 2px dashed white;
+}
+
+.white::before {
+  background-color: white;
 }
 
 .red::before {
