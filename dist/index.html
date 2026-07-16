@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Von</title>
+	<style>
+		body {
+			background-color: black;
+			color: white;
+		}
+
+		#player_info {
+			resize: none;
+			width: auto;
+			height: 100%;
+
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+
+			align-items: start;
+			justify-content: center;
+		}
+
+		#player_info {
+			padding: 8px 16px;
+			background-color: rgba(34, 34, 59, 0.664);
+			border: 2px solid rgba(255, 255, 255, 0.24);
+			border-radius: 8px;
+			user-select: none;
+		}
+	</style>
+</head>
+
+<body>
+	<header>
+		<h1>Von</h1>
+	</header>
+
+	<main>
+		<div class="information_panel">
+			<div>
+				<h3>Player Info</h3>
+				<div id="player_info"></div>
+			</div>
+			<br />
+
+			<button id="stop_travel">Stop Travelling</button>
+			<button class="travel" data-location="planet1">Travel to Planet 1</button>
+			<button class="travel" data-location="station1">Travel to Station 1</button>
+			<button class="travel" data-location="station2">Travel to Station 2</button>
+		</div>
+	</main>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/14.9.1/math.js"
+		integrity="sha512-Stf1OEZIOlJZqpMbyILBdU7No0e1HG72QmpPeNqAuKWY/0bQATeNs6zJ8Q1UXMkWPDUtyDE0kuk/j8QzZ6B76w=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script type="module" src="index.js"></script>
+</body>
+
+</html>
